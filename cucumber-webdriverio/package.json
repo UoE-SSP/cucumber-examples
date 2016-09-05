@@ -1,0 +1,16 @@
+{
+  "name": "basic-cucumber",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "cucumber": "node node_modules\\cucumber\\bin\\cucumber.js --require support"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cucumber": "^1.2.2",
+    "webdriverio": "^4.2.11"
+  }
+}
