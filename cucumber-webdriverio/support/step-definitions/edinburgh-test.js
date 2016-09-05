@@ -1,7 +1,7 @@
 module.exports = function() {
   var world = require('../support/world.js');
 
-  this.Given(/^that I am on the University of Edinburgh homepage$/, function() {
+  this.Given(/^that I am on the University of Edinburgh homepage$/, {timeout: 60000}, function() {
     return world.driver
       .url('http://www.ed.ac.uk/');
   });
@@ -19,6 +19,7 @@ module.exports = function() {
 
   this.Then(/^the phone number for "([A-Za-z0-9 ]+)" should be "([0-9]{6})"$/, function(owner, expectedNumber) {
     return world.driver
+      .waitForVisible(`//td[contains(., "${owner}")]/parent::tr/td[3]`, 5000)
       .getText(`//td[contains(., "${owner}")]/parent::tr/td[3]`)
       .then(function(actualNumber) {
         actualNumber = actualNumber.trim();

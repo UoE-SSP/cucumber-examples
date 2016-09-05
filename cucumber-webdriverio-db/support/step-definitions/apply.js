@@ -20,6 +20,7 @@ module.exports = function() {
     world.context.email = randomString(10) + '@fakesite.test';
 
     return world.driver
+      .waitForVisible('#IPU_FNM1', 2000)
       .setValue('#IPU_FNM1', 'Lucy')
       .setValue('#IPU_SURN', 'Test Student')
       .click('#IPU_DOB')
@@ -30,17 +31,21 @@ module.exports = function() {
   });
 
   this.Then(/^I should have an IPU record in the database$/, function() {
-    return world.getDB().then(function(db) {
-      return db.execute(`
-        SELECT IPU_FNM1, IPU_SURN
-        FROM SRS_IPU
-        WHERE UPPER(IPU_HAEM) = :email`,
-        {email: world.context.email.toUpperCase()}
-      ).then(function(result) {
-        if (result.rows[0][0] !== 'LUCY' && result.rows[0][1] !== 'TEST STUDENT') {
-          throw new Error('Could not find record for test student');
-        }
+    return world.driver
+      .waitForVisible('body')
+      .then(function() {
+        return world.getDB().then(function(db) {
+          return db.execute(`
+            SELECT IPU_FNM1, IPU_SURN
+            FROM SRS_IPU
+            WHERE UPPER(IPU_HAEM) = :email`,
+            {email: world.context.email.toUpperCase()}
+          ).then(function(result) {
+            if (result.rows[0][0] !== 'LUCY' && result.rows[0][1] !== 'TEST STUDENT') {
+              throw new Error('Could not find record for test student');
+            }
+          });
+        });
       });
-    });
   });
 };
